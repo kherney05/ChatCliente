@@ -3,6 +3,8 @@ import java.io.*;
 import java.net.*;
 import vista.InicioSesion;
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 import vista.VistaChat;
 import java.util.Formatter;
 
@@ -85,7 +87,44 @@ public class Cliente{
         }
     }
 
+
     public String getRutaConversacion() {
         return rutaConversacion;
     }
+
+
+
+    public void saveConversation(String conversacion1 ){
+        String texto = conversacion1;//variable para comparacion
+
+        if (texto.matches("[[ ]*[\n]*[\t]]*")) {//compara si en el JTextArea hay texto sino muestrtra un mensaje en pantalla
+            JOptionPane.showMessageDialog(null,"No hay texto para guardar!", "Oops! Error", JOptionPane.ERROR_MESSAGE);
+        }else{
+
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("todos los archivos *.EDU", "edu","EDU"));//filtro para ver solo archivos .edu
+            int seleccion = fileChooser.showSaveDialog(null);
+            try{
+                if (seleccion == JFileChooser.APPROVE_OPTION){//comprueba si ha presionado el boton de aceptar
+                    File JFC = fileChooser.getSelectedFile();
+                    String PATH = JFC.getAbsolutePath();//obtenemos el path del archivo a guardar
+                    PrintWriter printwriter = new PrintWriter(JFC);
+                    printwriter.print(conversacion1);//escribe en el archivo todo lo que se encuentre en el JTextArea
+                    printwriter.close();//cierra el archivo
+
+                    //comprobamos si a la hora de guardar obtuvo la extension y si no se la asignamos
+                    if(!(PATH.endsWith(".edu"))){
+                        File temp = new File(PATH+".edu");
+                        JFC.renameTo(temp);//renombramos el archivo
+                    }
+                    
+                    JOptionPane.showMessageDialog(null,"Guardado exitoso!", "Guardado exitoso!", JOptionPane.INFORMATION_MESSAGE);
+                }
+            }catch (Exception e){//por alguna excepcion salta un mensaje de error
+                JOptionPane.showMessageDialog(null,"Error al guardar el archivo!", "Oops! Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+
 }

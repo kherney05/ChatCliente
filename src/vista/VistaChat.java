@@ -5,6 +5,8 @@ import control.Cliente;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.util.Date;
 
 public class VistaChat extends JFrame {
     Cliente cliente;
@@ -45,7 +47,7 @@ public class VistaChat extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 cliente.escribirMensaje(taEnviar.getText());
-                actualizarMensajes(cliente.nombre+" dice > "+taEnviar.getText());
+                actualizarMensajes(cliente.nombre +" "+ (new Date().toString())+" dice > "+taEnviar.getText());
                 taEnviar.setText("");
                 textEstado.setText("Sin guardar");
             }
@@ -62,9 +64,13 @@ public class VistaChat extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String ruta = cliente.getRutaConversacion();
-                cliente.guardarConversacion(taPrincipal.getText());
+
+                cliente.saveConversation(taPrincipal.getText());
                 textEstado.setText("Guardado");
                 textRutaConver.setText(ruta);
+                cliente.guardarConversacion(taPrincipal.getText());
+
+
             }
         });
     }
